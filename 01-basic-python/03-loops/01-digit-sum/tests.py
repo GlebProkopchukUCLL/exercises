@@ -1,4 +1,3 @@
-import pytest
 import student
 import solution
 
@@ -11,7 +10,6 @@ def test_last_digit(n):
 
 
     solution_function = getattr(solution, function_name)
-    student_function = getattr(student, function_name)
 
     actual = student_function(n)
     expected = solution_function(n)
