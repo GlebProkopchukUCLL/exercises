@@ -1,11 +1,17 @@
-# Shape Exercise
+# Abstract Properties
 
-## Concepts Used
+Methods can be declared abstract, and so can properties.
 
-* Classes
-* Inheritance
-* Abstract methods
-* Properties
+```python
+from abc import ABC, abstractmethod
+
+
+class ParentClass(ABC):
+    @property
+    @abstractmethod
+    def foo(self):
+        ...
+```
 
 ## Task
 
@@ -32,3 +38,5 @@ In case you forgot the formulae for area and perimeter:
 | Rectangle | 2 &times; (`width` + `height`) | `width` &times; `height` |
 | Square | 4 &times; `side` | `side`<sup>2</sup> |
 | Circle | 2 &times; &pi; &times; `radius` | &pi; &times; `radius`<sup>2</sup> |
+
+
