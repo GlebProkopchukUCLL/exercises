@@ -1,42 +1,32 @@
 # Abstract Properties
 
-Methods can be declared abstract, and so can properties.
+Similarly to abstract methods, it's also possible to have abstract properties.
 
 ```python
-from abc import ABC, abstractmethod
-
-
-class ParentClass(ABC):
+class Foo:
     @property
     @abstractmethod
-    def foo(self):
-        ...
+    def my_property(self):
+        # ...
+
+    @my_property.setter
+    @abstractmethod
+    def my_property(self, value):
+        # ...
 ```
 
-## Task
+> You might notice that `@abstractproperty` exists, but it's been [deprecated](https://docs.python.org/3/library/abc.html#abc.abstractproperty).
+> This means you shouldn't use it because it's been replaced by something else (`@abstractmethod`) and it might disappear in a future version of Python.
 
-Write the following classes:
+# Task
 
-* Start with a `Shape` class.
-  This class must demand that all its subclasses have two properties named `area` and `perimeter`.
-  Since it makes no sense to implement these properties at this point, you should make them abstract.
-* Create a `Rectangle` class as a subclass of `Shape`.
-  It should have two attributes: `width` and `length`, both of which must be initialized using constructor parameters.
-  Since `Shape` demands it, you must also implement the `area` and `perimeter` properties.
-* Create a `Square` class as a subclass of `Rectangle`.
-  Its constructor should have only one parameter named `side` and use it to call `Rectangle`'s constructor.
-  You don't need to implement `area` and `perimeter` since `Square` already inherits implementations from `Rectangle`.
-* Create a `Circle` class.
-  Determine for yourself what it needs.
+Copy the code from `startercode.py` to `student.py`.
+The code defines two classes `Rectangle` and `Circle`.
+Define a class `Shape` that acts as their parent class.
 
-## Formulae
+Look at what members `Rectangle` and `Circle` have in common.
+Add those as abstract members to `Shape`.
 
-In case you forgot the formulae for area and perimeter:
-
-| Shape | Perimeter | Area |
-|-|-|-|
-| Rectangle | 2 &times; (`width` + `height`) | `width` &times; `height` |
-| Square | 4 &times; `side` | `side`<sup>2</sup> |
-| Circle | 2 &times; &pi; &times; `radius` | &pi; &times; `radius`<sup>2</sup> |
-
-
+You might wonder what use this might be: `Shape` only contains abstract members, so there's no shared code to speak of.
+You can see `Shape` as a sort of "contract": it provides a guarantee that all of its child classes must contain certain members.
+Say you were to define a new shape, say `Triangle`. In case you forget to implement a member, Python will point this out to you.

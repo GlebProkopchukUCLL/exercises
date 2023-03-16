@@ -1,8 +1,15 @@
-# FAQ
+---
+layout: page
+title: FAQ
+show_in_header: yes
+---
 
-## Assertions
+* Table of Contents
+{:toc}
 
-**Should I use `assert` to validate parameters?**
+# Assertions
+
+## Should I use `assert` to validate parameters?
 
 `assert` is meant for debugging, as explained on the [official site](https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement).
 
@@ -14,9 +21,7 @@ Typically, programs can run in two modes:
 An `assert`ion only runs in debug mode.
 Therefore, your code should never depend on `assert` for important things, such as parameter validation.
 
----
-
-**When should I use `assert`?**
+## When should I use `assert`?
 
 `assert` is often used in tests: these run in debug mode (it wouldn't make any sense to run them in release mode) so we are certain that assertions will be checked.
 
@@ -56,9 +61,9 @@ def contain_same_elements(xs, ys):
 
 ---
 
-## Classes
+# Classes
 
-**How should I implement `__eq__`?**
+## How should I implement `__eq__`?
 
 `__eq__` is the dunder method that corresponds to the `lhs == rhs` operator.
 It is a binary operator, i.e., it takes two operands.
@@ -177,9 +182,7 @@ Having `Fraction(2, 2) == 1` is easy to achieve, as this calls `Fraction.__eq__`
 However, for `1 == Fraction(2, 2)` to be `True`, you'd have to somehow be able to update `int.__eq__`, but that's not possible.
 Thanks to `NotImplemented` however, this is not necessary: `1.__eq__(Fraction(1, 1))` will return `NotImplemented`, causing `Fraction(1, 1).__eq__(1)` to be evaluated next, which can return `True`.
 
----
-
-**Should I check parameter types using `isinstance`?**
+## Should I check parameter types using `isinstance`?
 
 Short answer: no.
 
@@ -340,6 +343,102 @@ It's a choice.
 There is actually a [way](https://peps.python.org/pep-0484/) to add static type checking to Python.
 It's not perfect and sometimes clumsy, but it does help.
 
-**How should I build strings?**
+## How should I build strings?
 
-**What's the difference between `__str__` and `__repr__`?**
+There are multiple ways to construct a string.
+
+* Using addition: `"Greetings, " + name`. Avoid it: it is the most unreadable and inefficient approach.
+* [Using the `%` operator](https://docs.python.org/3/library/stdtypes.html#str.format): `"Greetings, %s" % name`. Quirky and limited. Best to avoid.
+* [Using `str.format`](https://docs.python.org/3/library/stdtypes.html#str.format): `"Greetings, {}".format(name)`.
+* [String interpolation](https://docs.python.org/3/reference/lexical_analysis.html#f-strings): f"Greetings {name}". This is the preferred solution. See also [PEP 498](https://peps.python.org/pep-0498/).
+
+## What's the difference between `__str__` and `__repr__`?
+
+Both are methods that are meant to convert an object into a string.
+You should never call these methods directly, but instead use `str` and `repr`:
+
+```python
+print(str(some_object))    # Internally class some_object.__str__
+print(repr(some_object))   # Internally class some_object.__repr__
+```
+
+* `__str__` should return a human-friendly, readable representation of the object.
+* `__repr__` should return a string that is actually Python code which allows you to recreate the object.
+
+For example,
+
+```python
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+
+    def __str__(self):
+        return f'{self.title} written by {self.author}'
+
+    def __repr__(self):
+        # {self.title!r} is shorthand for {repr(self.title)}
+        return f"Book(title={self.title!r}, author={self.author!r})"
+```
+
+# Git
+
+## Why do you inflict Git on us? What did we do to deserve this?
+
+You deserve this because you chose to study in IT...
+
+Admittedly, Git can be difficult to work with at first, but we assure you, once you understand how it works, it holds few surprises and using it will become second nature.
+
+Git is by far [the most used VCS](https://www.openhub.net/repositories/compare) (Version Control System).
+Git was developed by Linus Torvalds. He wanted a decent VCS for the development of Linux but couldn't find one, so he decided to [write his own](https://en.wikipedia.org/wiki/Git#History).
+Since then, Git has made its way in the industry: Google, Microsoft, Amazon, Twitter, Netflix, ... all use it.
+
+## How do I get better at Git?
+
+Chapter 2 of the [freely available book Pro Git](https://git-scm.com/book/en/v2) will help out a lot.
+Chapter 3 is also very useful.
+
+## I have two machines. How do I set them up so that both have access to my repository?
+
+Let's call your two machines A and B and assume you performed the installation instructions on A.
+Now you want your work to also be accessible on B.
+
+First, you need to have the GitHub URL of your repository.
+
+* You can go on Toledo and follow the GitHub Classroom link.
+* You can use `git remote -v` on machine A to see which repository URL is associated with `origin`.
+
+On B, create a new directory and clone your repository there.
+
+```bash
+# Replace URL by your GitHub URL
+$ git clone URL
+```
+
+In order to be able to receive updates on machine B, you might want to also add a link to the lecturer's repo:
+
+```bash
+$ git remote add upstream https://github.com/UCLL-PR2/exercises.git
+```
+
+Say you work on machine A.
+You need to store your changes in the repository.
+This is done as explained on the [workflow](workflow.md) page:
+
+```bash
+# Store changes in local repository on A
+$ git add FILES
+$ git commit -m "MESSAGE"
+
+# Upload changes to GitHub
+$ git push
+```
+
+You can then download your changes on machine B:
+
+```bash
+# Downloads changes from GitHub
+$ git pull
+```
+
+So, in short, you push your changes on one machine and pull them onto the other machine.
