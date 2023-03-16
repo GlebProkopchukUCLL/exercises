@@ -1,6 +1,6 @@
 import student
 import solution
-
+import pytest
 
 @pytest.mark.parametrize("n", [0, 1, 4, 9, 10, 19, 231, 849, 23892380, 380928390185])
 def test_last_digit(n):
@@ -10,6 +10,7 @@ def test_last_digit(n):
 
 
     solution_function = getattr(solution, function_name)
+    student_function = getattr(student, function_name)
 
     actual = student_function(n)
     expected = solution_function(n)
